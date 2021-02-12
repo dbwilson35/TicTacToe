@@ -29,63 +29,65 @@ def play_game():
             if current_player == 2:
                 board[int(turn)] = 'O'                                                                  #O for Player 2
         if check_win(board) == True:
-            print('Congratulations PLayer ' + str(current_player) + '! You are the winner!')
-            display_board()
-            new_game()
+            print('Congratulations Player ' + str(current_player) + '! You are the winner!')            #Congratulate winning player
+            display_board()                                                                             #Display board
+            new_game()                                                                                  #Ask to play again?
             continue
         if check_tie(board) == True:
-            print('Tie Game!')
-            display_board()
-            new_game()
+            print('Tie Game!')                                                                          #Oops Tie Game
+            display_board()                                                                             #Display board
+            new_game()                                                                                  #Ask to play again?
             continue
-        current_player = next_player(current_player)
+        current_player = next_player(current_player)                                                    #Change Player to next player (1 -> 2, 2 -> 1)
         continue
 
 
 #switch players
 def next_player(current_player):
-    if check_tie(board) == True or check_win(board) == True:
+    if current_player == 1:
+        return 2
+    if current_player == 2:
         return 1
-    else:
-        if current_player == 1:
-            return 2
-        if current_player == 2:
-            return 1
 
-
-def check_win(board): #giving it the import of board
-    #check rows
-    win =[board[1] == board[2] == board[3] != '_',
+#check win
+def check_win(board):
+    win =[                                          #List of win variations
+          #row variations
+          board[1] == board[2] == board[3] != '_',
           board[4] == board[5] == board[6] != '_',
           board[7] == board[8] == board[9] != '_',
+
+          #column variations
           board[1] == board[4] == board[7] != '_',
           board[2] == board[5] == board[8] != '_',
           board[3] == board[6] == board[9] != '_',
+
+          #diagonal variations
           board[1] == board[5] == board[9] != '_',
           board[3] == board[5] == board[7] != '_'
         ]
-    return win.count(True) > 0
+    return win.count(True) > 0                      #return True if any win variations are True.
+
 
 #check tie
 def check_tie(board):
-    list_of_values = []
-    for value in board.values():
-        list_of_values.append(value)
-    if list_of_values.count('_') == 0 and check_win(board) != True:
-        return True
+    list_of_values = [value for value in board.values()]
+    return list_of_values.count('_') == 0 and check_win(board) != True #return True if there are no blank spaces and no winner
 
 
+#new game
 def new_game():
     global game_running
     new_game = input('Would you like to play again? (Y/N)')
-    if new_game == 'Y':
+    if new_game == 'Y':                                       #If Y, reset the board and play again.
         reset_board(board)
-    if new_game != 'Y':
+    if new_game != 'Y':                                       #If anything other than Y, update game_running to False so the game stops
         game_running = False
+
 
 #reset board for new_game
 def reset_board(board):
-    for a, b in board.items():
+    for a in board.keys():              #Reset the board so all values are '_'
         board[a] = '_'
 
 play_game()
