@@ -54,10 +54,9 @@ def next_player(current_player):
 
 
 #Let's play the game!
-
-game_running = True
-
 def play_game():
+    global game_running
+    game_running = True
     current_player = 1          #set player 1 as the current_player
     plank = ttc_board()         #variable named plank because naming it board might get confusing and a blank is another word for a board right??
     while game_running:
