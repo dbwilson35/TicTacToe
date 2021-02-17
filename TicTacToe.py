@@ -1,50 +1,49 @@
-#board
-board = {1: '_',2: '_',3: '_',
-         4: '_',5: '_',6: '_',
-         7: '_',8: '_',9: '_'}
+class ttc_board:
 
-#displayboard
-def display_board():
-    print(board[1] + '|' + board[2] + '|' + board[3])
-    print(board[4] + '|' + board[5] + '|' + board[6])
-    print(board[7] + '|' + board[8] + '|' + board[9])
+    def __init__(self):
+        self.board  = {1: '_',2: '_',3: '_',
+                       4: '_',5: '_',6: '_',
+                       7: '_',8: '_',9: '_'}
 
 
+    def display(self):
+        print(self.board[1] + '|' + self.board[2] + '|' + self.board[3])
+        print(self.board[4] + '|' + self.board[5] + '|' + self.board[6])
+        print(self.board[7] + '|' + self.board[8] + '|' + self.board[9])
 
-#check win
-def check_win(board):
-    win =[                                          #List of win variations
-          #row variations
-          board[1] == board[2] == board[3] != '_',
-          board[4] == board[5] == board[6] != '_',
-          board[7] == board[8] == board[9] != '_',
 
-          #column variations
-          board[1] == board[4] == board[7] != '_',
-          board[2] == board[5] == board[8] != '_',
-          board[3] == board[6] == board[9] != '_',
+    def check_win(self):
+        win = [                                         # List of win variations
+            # row variations
+            self.board[1] == self.board[2] == self.board[3] != '_',
+            self.board[4] == self.board[5] == self.board[6] != '_',
+            self.board[7] == self.board[8] == self.board[9] != '_',
 
-          #diagonal variations
-          board[1] == board[5] == board[9] != '_',
-          board[3] == board[5] == board[7] != '_'
+            # column variations
+            self.board[1] == self.board[4] == self.board[7] != '_',
+            self.board[2] == self.board[5] == self.board[8] != '_',
+            self.board[3] == self.board[6] == self.board[9] != '_',
+
+            # diagonal variations
+            self.board[1] == self.board[5] == self.board[9] != '_',
+            self.board[3] == self.board[5] == self.board[7] != '_'
         ]
-    return win.count(True) > 0                      #return True if any win variations are True.
+        return win.count(True) > 0
 
 
-#check tie
-def check_tie(board):
-    list_of_values = [value for value in board.values()]
-    return list_of_values.count('_') == 0 and check_win(board) != True #return True if there are no blank spaces and no winner
+    def check_tie(self):
+        list_of_values = [value for value in self.board.values()]
+        return list_of_values.count('_') == 0 and self.check_win() != True   # return True if there are no blank spaces and no winner
 
 
-#new game
-def new_game():
-    global game_running
-    new_game = input('Would you like to play again? (Y/N)')
-    if new_game == 'Y':                                       #If Y, reset the board and play again.
-        reset_board(board)
-    if new_game != 'Y':                                       #If anything other than Y, update game_running to False so the game stops
-        game_running = False
+    def new_game(self):
+        global game_running
+        new_game = input('Would you like to play again? (Y/N)')
+        if new_game == 'Y':
+            self.__init__()
+        if new_game != 'Y':  # If anything other than Y, update game_running to False so the game stops
+            game_running = False
+
 
 #next player
 def next_player(current_player):
@@ -54,47 +53,38 @@ def next_player(current_player):
         return 1
 
 
-
-#reset board for new_game
-def reset_board(board):
-    for a in board.keys():              #Reset the board so all values are '_'
-        board[a] = '_'
-
-
 #Let's play the game!
 
 game_running = True
 
-#play game
 def play_game():
     current_player = 1          #set player 1 as the current_player
+    plank = ttc_board()         #variable named plank because naming it board might get confusing and a blank is another word for a board right??
     while game_running:
-        display_board()         #disply the current board
+        plank.display()
         turn = input('Hello Player ' + str(current_player) + '. Please choose a spot that has not been chosen! (1-9)')      #request current player pick a square
         if int(turn) not in range(1,10):                                                                                     #if number is not between 1 and 9 then have player re-enter number
             print('That number is invalid. Please select a number 1 through 9')
             continue
-        if board[int(turn)] != '_':                                                                     #if space has already been chosen have player choose new number
+        if plank.board[int(turn)] != '_':                                                                     #if space has already been chosen have player choose new number
             print('That spot has already been chosen. Please select a different one.')
             continue
-        if board[int(turn)] == '_':                                                                     #if space has not been chosen then
+        if plank.board[int(turn)] == '_':                                                                     # if space has not been chosen then
             if current_player == 1:
-                board[int(turn)] = 'X'                                                                  #X for Player 1
+                plank.board[int(turn)] = 'X'                                                                  # X for Player 1
             if current_player == 2:
-                board[int(turn)] = 'O'                                                                  #O for Player 2
-        if check_win(board) == True:
-            print('Congratulations Player ' + str(current_player) + '! You are the winner!')            #Congratulate winning player
-            display_board()                                                                             #Display board
-            new_game()                                                                                  #Ask to play again?
+                plank.board[int(turn)] = 'O'                                                                  # O for Player 2
+        if plank.check_win():
+            print('Congratulations Player ' + str(current_player) + '! You are the winner!')                  # Congratulate winning player
+            plank.display()                                                                                   # Display board
+            plank.new_game()                                                                                  # Ask to play again?
             continue
-        if check_tie(board) == True:
-            print('Tie Game!')                                                                          #Oops Tie Game
-            display_board()                                                                             #Display board
-            new_game()                                                                                  #Ask to play again?
+        if plank.check_tie():
+            print('Tie Game!')                                                                                #Oops Tie Game
+            plank.display()                                                                                   #Display board
+            plank.new_game()                                                                                  #Ask to play again?
             continue
         current_player = next_player(current_player)                                                    #Change Player to next player (1 -> 2, 2 -> 1)
         continue
-
-
 
 play_game()
